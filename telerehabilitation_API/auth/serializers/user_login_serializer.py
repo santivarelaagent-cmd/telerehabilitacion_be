@@ -10,7 +10,7 @@ class UserLoginSerializer(serializers.Serializer):
     def validate(self, data):
         user = authenticate(username=data['username'], password=data['password'])
         if not user:
-            raise serializers.ValidationError('Las credenciales no son válidas')
+            raise serializers.ValidationError('The credentials are not valid')
 
         self.context['user'] = user
         return data
