@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from telerehabilitation_API.auth.serializers.group_serializer import GroupSerializer
+from telerehabilitation_API.authentication.serializers.group_serializer import GroupSerializer
 
 
 class UserModelSerializer(serializers.HyperlinkedModelSerializer):

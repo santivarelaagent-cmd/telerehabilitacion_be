@@ -3,7 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from telerehabilitation_API.auth.serializers import UserLoginSerializer, UserModelSerializer
+from telerehabilitation_API.authentication.serializers import UserLoginSerializer, UserModelSerializer
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -21,3 +21,4 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
             'access_token': token
         }
         return Response(data, status=status.HTTP_201_CREATED)
+
