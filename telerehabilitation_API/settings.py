@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'corsheaders',
+    'telerehabilitation_API.authentication',
+    'telerehabilitation_API.therapy',
 ]
 
 MIDDLEWARE = [

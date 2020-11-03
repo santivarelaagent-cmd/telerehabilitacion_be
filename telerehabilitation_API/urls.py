@@ -20,7 +20,11 @@ from rest_framework import permissions, routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from telerehabilitation_API.auth.views import UserViewSet
+from telerehabilitation_API.authentication.views import UserViewSet
+from telerehabilitation_API.therapy.views import TherapyViewSet
+from telerehabilitation_API.therapy.views.exercise_view_set import ExerciseViewSet
+from telerehabilitation_API.therapy.views.routine_view_set import RoutineViewSet
+from telerehabilitation_API.therapy.views.skeleton_view_set import SkeletonViewSet
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -37,6 +41,10 @@ schema_view = get_schema_view(
 
 router = routers.DefaultRouter()
 router.register(r'auth/users', UserViewSet)
+router.register(r'therapies', TherapyViewSet)
+router.register(r'routines', RoutineViewSet)
+router.register(r'exercises', ExerciseViewSet)
+router.register(r'skeleton', SkeletonViewSet)
 
 urlpatterns = [
    path('admin/', admin.site.urls),
