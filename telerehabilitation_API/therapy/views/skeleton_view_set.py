@@ -8,4 +8,5 @@ class SkeletonViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SkeletonPoint.objects.all()
     serializer_class = SkeletonPointSerializer
     permission_classes = [permissions.IsAuthenticated]
-    pagination.PageNumberPagination.page_size = 100
+    pagination_class = None
+
