@@ -2,3 +2,4 @@
 venv/
 telerehabilitation_API/**/migrations/0*
 *__pycache__/
+media/
