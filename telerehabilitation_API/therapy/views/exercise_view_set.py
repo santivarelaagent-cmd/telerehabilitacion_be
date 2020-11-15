@@ -71,3 +71,24 @@ class ExerciseViewSet(viewsets.ModelViewSet):
             exercise.save()
             return Response({}, status=200)
         return Response({'errors': errors}, status=400)
+
+    @action(methods=['post'], detail=True)
+    def video_results(self, request, pk=None):
+        exercise = self.get_object()
+        errors = []
+        if 'error' not in request.data or 'results' not in request.data:
+            return Response(status=400)
+        if request.data['error']:
+            exercise.status = Exercise.ERROR
+            exercise.save()
+        else:
+            exercise.status = Exercise.PROCESSED
+            exercise.save()
+            recieved_data = request.data['results']
+            points = recieved_data['points']
+            for point_tracked in ExerciseSkeletonPointTracked.objects.filter(exercise=exercise).all():
+                point = next(x for x in points if x['center'] == point_tracked.skeleton_point.codename)
+                point_tracked.max_angle = float(point['max_angle'])
+                point_tracked.min_angle= float(point['min_angle'])
+                point_tracked.save()
+        return Response(status=200)
