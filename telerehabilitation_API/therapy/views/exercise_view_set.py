@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from telerehabilitation_API.therapy.models import Exercise, ExerciseSkeletonPointTracked
 from telerehabilitation_API.therapy.permissions import CanCreateExercise, CanEditExercise, CanDeleteExercise
-from telerehabilitation_API.therapy.serializers import ExerciseSerializer
+from telerehabilitation_API.therapy.serializers import ExerciseSerializer, SkeletonPointSerializer
 from telerehabilitation_API.therapy.serializers.exercise_video_serializer import ExerciseVideoSerializer
 
 
@@ -92,3 +92,14 @@ class ExerciseViewSet(viewsets.ModelViewSet):
                 point_tracked.min_angle= float(point['min_angle'])
                 point_tracked.save()
         return Response(status=200)
+
+    @action(methods=['get'], detail=True)
+    def points_tracked(self, request, pk=None):
+        exercise = self.get_object()
+        points = []
+        for point in exercise.tracked_points.all():
+            point_serialized = SkeletonPointSerializer(point.skeleton_point).data
+            point_serialized.update({'max_angle': point.max_angle,'min_angle': point.min_angle})
+            points.append(point_serialized)
+        return Response(points)
+
