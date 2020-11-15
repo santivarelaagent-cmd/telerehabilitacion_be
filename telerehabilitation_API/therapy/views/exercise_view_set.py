@@ -1,3 +1,6 @@
+import requests
+import json
+
 from rest_framework import permissions, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -39,10 +42,32 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         if 'points' not in request.data:
             errors.append({ 'points': 'There is no points' })
         if not errors:
+            ExerciseSkeletonPointTracked.objects.filter(exercise=exercise).delete()
             for point in request.data['points'].split(','):
                 point_tracked = ExerciseSkeletonPointTracked(exercise=exercise, skeleton_point_id=int(point))
                 point_tracked.save()
+            points_tracked = [{
+                'center': x.skeleton_point.codename,
+                'left_point': x.skeleton_point.left_point.codename,
+                'right_point': x.skeleton_point.right_point.codename
+            } for x in ExerciseSkeletonPointTracked.objects.filter(exercise=exercise).all()]
+            try:
+                send_video_response = requests.post(
+                        'http://localhost:3000/video/',
+                        files={'video': request.data['video']},
+                        data={
+                            'points': json.dumps(points_tracked, separators=(',', ':')),
+                            'exercise': json.dumps(ExerciseSerializer(exercise, context={'request': request}).data, separators=(',', ':')),
+                            'token': request.auth
+                        }
+                )
+                if send_video_response.status_code == 200:
+                    exercise.status = Exercise.PROCESSING
+                else:
+                    exercise.status = Exercise.ERROR
+            except Exception as e:
+                exercise.status = Exercise.ERROR
             exercise.video = request.data['video']
             exercise.save()
-            return Response(status=200)
+            return Response({}, status=200)
         return Response({'errors': errors}, status=400)
