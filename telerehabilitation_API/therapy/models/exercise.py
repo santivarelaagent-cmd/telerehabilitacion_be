@@ -8,11 +8,21 @@ def upload_exercise_video_to(instance, filename):
 
 
 class Exercise(models.Model):
+    NO_VIDEO = "1"
+    PROCESSING = "2"
+    PROCESSED = "3"
+    ERROR = "4"
+    EXERCISE_STATUS = [
+        (NO_VIDEO, "Sin video"),
+        (PROCESSING, "Video en procesamiento"),
+        (PROCESSED, "Video procesado"),
+        (ERROR, "Error al procesar video")
+    ]
     routine = models.ForeignKey(Routine, on_delete=models.SET_NULL, null=True, related_name='exercises')
     name = models.CharField(max_length=128)
     description = models.TextField()
     order = models.IntegerField()
     video = models.FileField(upload_to=upload_exercise_video_to)
-    has_been_tracked = models.BooleanField(default=False)
+    status = models.CharField(max_length=32, choices=EXERCISE_STATUS, default=NO_VIDEO)
     is_model = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
