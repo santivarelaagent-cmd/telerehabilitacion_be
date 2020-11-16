@@ -20,7 +20,8 @@ from rest_framework import permissions, routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from telerehabilitation_API.authentication.views import UserViewSet
+from telerehabilitation_API.authentication.views import UserViewSet, PatientViewSet
+from telerehabilitation_API.authentication.views.therapist_view_set import TherapistViewSet
 from telerehabilitation_API.therapy.views import TherapyViewSet
 from telerehabilitation_API.therapy.views.exercise_view_set import ExerciseViewSet
 from telerehabilitation_API.therapy.views.routine_view_set import RoutineViewSet
@@ -52,4 +53,6 @@ urlpatterns = [
    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
    path('', include(router.urls)),
+   path('patients', PatientViewSet.as_view()),
+   path('therapists', TherapistViewSet.as_view()),
 ]

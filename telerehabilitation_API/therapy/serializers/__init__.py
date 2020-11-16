@@ -3,3 +3,4 @@ from .routine_serializer import RoutineSerializer
 from .exercise_serializer import ExerciseSerializer
 from .exercise_video_serializer import ExerciseVideoSerializer
 from .skeleton_serializer import SkeletonPointSerializer
+from .therapy_patient_serializer import TherapyPatientSerializer

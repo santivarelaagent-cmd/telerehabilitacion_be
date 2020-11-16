@@ -1,8 +1,13 @@
-from rest_framework import viewsets, permissions
+import json
 
-from telerehabilitation_API.therapy.models import Therapy
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from telerehabilitation_API.therapy.models import Therapy, TherapyPatient
 from telerehabilitation_API.therapy.permissions import CanCreateTherapy, CanEditTherapy, CanDeleteTherapy
 from telerehabilitation_API.therapy.serializers import TherapySerializer
+from telerehabilitation_API.authentication.serializers import PatientSerializer
 
 
 class TherapyViewSet(viewsets.ModelViewSet):
@@ -18,3 +23,25 @@ class TherapyViewSet(viewsets.ModelViewSet):
         elif self.action == 'destroy':
             permissions_classes.append(CanDeleteTherapy)
         return [permission() for permission in permissions_classes]
+
+    @action(methods=['get'], detail=True)
+    def get_patients(self, request, pk=None):
+        return Response(
+            PatientSerializer(
+                [x.patient for x in self.get_object().patients.all()],
+                many=True
+            ).data
+        )
+
+    @action(methods=['post'], detail=True)
+    def enroll_patient(self, request, pk=None):
+        therapy = self.get_object()
+        body = request.data
+        TherapyPatient.objects.create(
+            therapist_id=body['therapist'],
+            therapy_id=body['therapy'],
+            patient_id=body['patient']
+        )
+        return Response(body)
+
+
