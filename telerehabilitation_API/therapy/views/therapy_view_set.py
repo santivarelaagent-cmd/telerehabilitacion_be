@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from telerehabilitation_API.therapy.models import Therapy, TherapyPatient
 from telerehabilitation_API.therapy.permissions import CanCreateTherapy, CanEditTherapy, CanDeleteTherapy
-from telerehabilitation_API.therapy.serializers import TherapySerializer
+from telerehabilitation_API.therapy.serializers import TherapySerializer, RoutineSerializer
 from telerehabilitation_API.authentication.serializers import PatientSerializer
 
 
@@ -27,10 +27,10 @@ class TherapyViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=True)
     def get_patients(self, request, pk=None):
         return Response(
-            PatientSerializer(
-                [x.patient for x in self.get_object().patients.all()],
-                many=True
-            ).data
+            [{
+                'id': x.id,
+                'patient': PatientSerializer(x.patient).data
+            } for x in self.get_object().patients.all()]
         )
 
     @action(methods=['post'], detail=True)
@@ -44,4 +44,7 @@ class TherapyViewSet(viewsets.ModelViewSet):
         )
         return Response(body)
 
-
+    @action(methods=['get'], detail=True)
+    def routines(self, request, pk=None):
+        therapy = self.get_object()
+        return Response(RoutineSerializer(therapy.routines.all(), many=True, context={'request': request}).data)
