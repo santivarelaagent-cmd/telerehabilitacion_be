@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Permission
 from rest_framework import permissions
 
 
@@ -24,5 +25,5 @@ class CanDeleteTherapy(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-
-        return request.user.has_perm('therapy.delete_therapy')
+        user_permissions = request.user.get_all_permissions()
+        return 'therapy.delete_therapy' in user_permissions

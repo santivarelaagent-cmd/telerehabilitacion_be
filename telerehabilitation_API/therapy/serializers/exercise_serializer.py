@@ -23,7 +23,8 @@ class ExerciseSerializer(serializers.ModelSerializer):
     routine = serializers.HyperlinkedRelatedField(view_name='routine-detail', read_only=True)
     routine_id = serializers.IntegerField(required=False)
     status = ChoiceField(choices=Exercise.EXERCISE_STATUS)
+    video = serializers.CharField()
 
     class Meta:
         model = Exercise
-        fields = ['id', 'name', 'description', 'order', 'routine', 'routine_id', 'status', 'is_model', 'is_active']
+        fields = ['id', 'name', 'description', 'order', 'routine', 'routine_id', 'status', 'video', 'is_model', 'is_active']
