@@ -27,6 +27,7 @@ from telerehabilitation_API.therapy.views.exercise_view_set import ExerciseViewS
 from telerehabilitation_API.therapy.views.routine_view_set import RoutineViewSet
 from telerehabilitation_API.therapy.views.scheduled_training_view_set import ScheduledTrainingViewSet
 from telerehabilitation_API.therapy.views.skeleton_view_set import SkeletonViewSet
+from telerehabilitation_API.therapy.views.therapist_patients_view_set import TherapistPatientsViewSet
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -57,4 +58,5 @@ urlpatterns = [
    path('patients', PatientViewSet.as_view()),
    path('therapists', TherapistViewSet.as_view()),
    path('scheduled_training', ScheduledTrainingViewSet.as_view()),
+   path('therapist_patient', TherapistPatientsViewSet.as_view()),
 ]

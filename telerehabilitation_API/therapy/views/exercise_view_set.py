@@ -5,9 +5,11 @@ from rest_framework import permissions, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from telerehabilitation_API.therapy.models import Exercise, ExerciseSkeletonPointTracked
+from telerehabilitation_API.therapy.models import Exercise, ExerciseSkeletonPointTracked, ExerciseDifficulty, \
+    DifficultyRange
 from telerehabilitation_API.therapy.permissions import CanCreateExercise, CanEditExercise, CanDeleteExercise
 from telerehabilitation_API.therapy.serializers import ExerciseSerializer, SkeletonPointSerializer
+from telerehabilitation_API.therapy.serializers.exercise_difficulty_serializer import ExerciseDifficultySerializer
 from telerehabilitation_API.therapy.serializers.exercise_video_serializer import ExerciseVideoSerializer
 
 
@@ -99,7 +101,33 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         points = []
         for point in exercise.tracked_points.all():
             point_serialized = SkeletonPointSerializer(point.skeleton_point).data
-            point_serialized.update({'max_angle': point.max_angle,'min_angle': point.min_angle})
+            point_serialized.update({'max_angle': point.max_angle,'min_angle': point.min_angle, 'point_id': point.id})
             points.append(point_serialized)
         return Response(points)
 
+    @action(methods=['get'], detail=True)
+    def difficulties(self, request, pk=None):
+        exercise = self.get_object()
+        return Response(
+            ExerciseDifficultySerializer(exercise.difficulties, many=True).data
+        )
+
+    @action(methods=['post'], detail=True)
+    def post_difficulty(self, request, pk=None):
+        exercise = self.get_object()
+        if 'name' not in request.data or 'description' not in request.data or 'ranges' not in request.data or 'exercise_id' not in request.data:
+            return Response(status=400)
+        ranges = json.loads(request.data['ranges'])
+        difficulty = ExerciseDifficulty.objects.create(
+            exercise_id=int(request.data['exercise_id']),
+            name=request.data['name'],
+            description=request.data['description']
+        )
+        for range in ranges:
+            DifficultyRange.objects.create(
+                point_tracked_id=int(range['point_tracked']['point_id']),
+                difficulty_id=difficulty.id,
+                max_angle=range['max_angle'],
+                min_angle=range['min_angle'],
+            )
+        return Response(status=201)

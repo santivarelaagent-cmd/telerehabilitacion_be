@@ -6,8 +6,8 @@ from telerehabilitation_API.therapy.serializers.exercise_serializer import Exerc
 
 
 class RoutineSerializer(serializers.ModelSerializer):
-    exercises = ExerciseSerializer(many=True)
-    therapy = TherapySerializer()
+    exercises = ExerciseSerializer(many=True, required=False)
+    therapy = TherapySerializer(required=False)
     therapy_id = serializers.IntegerField(required=False)
 
     class Meta:
