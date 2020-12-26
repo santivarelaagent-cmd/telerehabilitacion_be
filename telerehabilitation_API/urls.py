@@ -21,6 +21,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 from telerehabilitation_API.authentication.views import UserViewSet, PatientViewSet
+from telerehabilitation_API.authentication.views.admin_view_set import AdminViewSet
 from telerehabilitation_API.authentication.views.therapist_view_set import TherapistViewSet
 from telerehabilitation_API.therapy.views import TherapyViewSet
 from telerehabilitation_API.therapy.views.exercise_view_set import ExerciseViewSet
@@ -57,6 +58,7 @@ urlpatterns = [
    path('', include(router.urls)),
    path('patients', PatientViewSet.as_view()),
    path('therapists', TherapistViewSet.as_view()),
+   path('admins', AdminViewSet.as_view()),
    path('scheduled_training', ScheduledTrainingViewSet.as_view()),
    path('therapist_patient', TherapistPatientsViewSet.as_view()),
 ]
