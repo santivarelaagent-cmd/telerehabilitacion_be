@@ -17,8 +17,7 @@ class TherapistPatientsViewSet(APIView):
                 return Response([], status=400)
             try:
                 patients_json = TherapyPatientSerializer(
-                    TherapyPatient.objects.filter(patient__user_id=int(patient_id)),
-                    many=True,
+                    TherapyPatient.objects.get(pk=int(patient_id)),
                     context={'request': request}
                 ).data
 

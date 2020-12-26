@@ -9,4 +9,4 @@ class ExerciseDifficultySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExerciseDifficulty
-        fields = ['exercise_id', 'name', 'description', 'ranges']
+        fields = ['id', 'exercise_id', 'name', 'description', 'ranges']

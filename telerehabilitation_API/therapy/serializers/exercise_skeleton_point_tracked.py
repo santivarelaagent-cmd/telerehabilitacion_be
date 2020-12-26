@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from telerehabilitation_API.therapy.models import ExerciseSkeletonPointTracked
-from telerehabilitation_API.therapy.serializers import SkeletonPointSerializer
+from telerehabilitation_API.therapy.serializers.skeleton_serializer import SkeletonPointSerializer
 
 
 class ExerciseSkeletonPointTrackedSerializer(serializers.ModelSerializer):

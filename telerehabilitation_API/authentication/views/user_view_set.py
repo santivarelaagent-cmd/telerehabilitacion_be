@@ -22,3 +22,12 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         }
         return Response(data, status=status.HTTP_201_CREATED)
 
+    @action(detail=False, methods=['post'])
+    def change_password(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user, token = serializer.save()
+        user.set_password(request.data['new_password'])
+        user.save()
+        return Response({}, status=status.HTTP_201_CREATED)
+

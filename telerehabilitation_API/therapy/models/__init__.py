@@ -7,3 +7,4 @@ from .exercise_skeleton_point_tracked import ExerciseSkeletonPointTracked
 from .scheduled_training import ScheduledTraining
 from .exercise_difficulty import ExerciseDifficulty
 from .difficulty_range import DifficultyRange
+from .scheduled_training_difficulty import ScheduledTrainingDifficulty
