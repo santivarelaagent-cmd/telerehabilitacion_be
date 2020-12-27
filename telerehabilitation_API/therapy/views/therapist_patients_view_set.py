@@ -17,12 +17,12 @@ class TherapistPatientsViewSet(APIView):
                 return Response([], status=400)
             try:
                 patients_json = TherapyPatientSerializer(
-                    TherapyPatient.objects.filter(patient__user_id=int(patient_id)),
+                    TherapyPatient.objects.filter(id=int(patient_id)),
                     many=True,
                     context={'request': request}
                 ).data
 
-                return Response(patients_json, status=200)
+                return Response(patients_json[0], status=200)
             except TherapyPatient.DoesNotExist:
                 return Response([], status=404)
         else:
