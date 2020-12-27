@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -21,5 +21,7 @@ class PatientViewSet(APIView):
             new_patient.first_name = request.data['first_name']
             new_patient.last_name = request.data['last_name']
             new_patient.save()
+            patient_group = Group.objects.get(name="Patient")
+            patient_group.user_set.add(new_patient)
             Patient.objects.create(user_id=new_patient.id)
             return Response({}, status=201)

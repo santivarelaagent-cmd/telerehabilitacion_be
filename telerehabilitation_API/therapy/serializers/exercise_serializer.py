@@ -25,8 +25,8 @@ class ChoiceField(serializers.ChoiceField):
 class ExerciseSerializer(serializers.ModelSerializer):
     routine = serializers.HyperlinkedRelatedField(view_name='routine-detail', read_only=True)
     routine_id = serializers.IntegerField(required=False)
-    status = ChoiceField(choices=Exercise.EXERCISE_STATUS)
-    video = serializers.CharField()
+    status = ChoiceField(choices=Exercise.EXERCISE_STATUS, required=False)
+    video = serializers.CharField(required=False)
     difficulties = ExerciseDifficultySerializer(many=True, required=False)
 
     class Meta:

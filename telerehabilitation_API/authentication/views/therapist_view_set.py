@@ -17,11 +17,11 @@ class TherapistViewSet(APIView):
            'last_name' not in request.data.keys():
             return Response({}, status=400)
         else:
-            new_patient = User.objects.create_user(request.data['username'], request.data['email'], '123456789')
-            new_patient.first_name = request.data['first_name']
-            new_patient.last_name = request.data['last_name']
-            new_patient.save()
+            new_therapist = User.objects.create_user(request.data['username'], request.data['email'], '123456789')
+            new_therapist.first_name = request.data['first_name']
+            new_therapist.last_name = request.data['last_name']
+            new_therapist.save()
             therapist_group = Group.objects.get(name="Therapist")
-            therapist_group.user_set.add(new_patient)
-            Therapist.objects.create(user_id=new_patient.id)
+            therapist_group.user_set.add(new_therapist)
+            Therapist.objects.create(user_id=new_therapist.id)
             return Response({}, status=201)

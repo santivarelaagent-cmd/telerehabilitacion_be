@@ -12,9 +12,22 @@ class TherapistPatientsViewSet(APIView):
     def get(self, request):
         therapist_id = request.GET.get('therapist_id', 'NOT_FOUND')
         patient_id = request.GET.get('patient_id', 'NOT_FOUND')
+        patient_user_id = request.GET.get('patient_user_id', 'NOT_FOUND')
         if therapist_id == 'NOT_FOUND':
             if patient_id == 'NOT_FOUND':
-                return Response([], status=400)
+                if patient_user_id == 'NOT_FOUND':
+                    return Response([], status=400)
+                else:
+                    try:
+                        patients_json = TherapyPatientSerializer(
+                            TherapyPatient.objects.filter(patient__user_id=int(patient_user_id)),
+                            many=True,
+                            context={'request': request}
+                        ).data
+
+                        return Response(patients_json, status=200)
+                    except TherapyPatient.DoesNotExist:
+                        return Response([], status=404)
             try:
                 patients_json = TherapyPatientSerializer(
                     TherapyPatient.objects.get(pk=int(patient_id)),

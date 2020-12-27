@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from telerehabilitation_API.authentication.serializers import PatientSerializer, TherapistSerializer
-from telerehabilitation_API.therapy.models import ScheduledTraining
+from telerehabilitation_API.therapy.models import ScheduledTraining, ScheduledTrainingDifficulty, scheduled_training
 from telerehabilitation_API.therapy.serializers import RoutineSerializer
 
 
@@ -42,10 +42,16 @@ class ScheduledTrainingViewSet(APIView):
 
     def post(self, request):
         body = request.data
-        print(body['start_time'])
-        ScheduledTraining.objects.create(
+        scheduled_training_obj = ScheduledTraining.objects.create(
             routine_id=body['routine'],
             therapy_patient_id=body['therapy_patient'],
             start_time=datetime.strptime(body['start_time']+':-0500', '%d/%m/%Y %H:%M:%S:%z')
         )
+        for diff in request.data['difficulties']:
+            ScheduledTrainingDifficulty.objects.create(
+                difficulty_id=diff['diff'],
+                exercise_id=diff['exercise_id'],
+                scheduled_training= scheduled_training_obj
+            )
+
         return Response({}, status=201)
