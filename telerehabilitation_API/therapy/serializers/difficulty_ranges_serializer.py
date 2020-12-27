@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from telerehabilitation_API.therapy.models import DifficultyRange
-from telerehabilitation_API.therapy.serializers import SkeletonPointSerializer
 from telerehabilitation_API.therapy.serializers.exercise_skeleton_point_tracked import \
     ExerciseSkeletonPointTrackedSerializer
 

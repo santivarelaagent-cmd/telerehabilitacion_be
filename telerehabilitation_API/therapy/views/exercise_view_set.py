@@ -54,23 +54,26 @@ class ExerciseViewSet(viewsets.ModelViewSet):
                 'right_point': x.skeleton_point.right_point.codename
             } for x in ExerciseSkeletonPointTracked.objects.filter(exercise=exercise).all()]
             try:
+                exercise.video = request.data['video']
+                exercise.save()
                 send_video_response = requests.post(
                         'http://localhost:3000/video/',
-                        files={'video': request.data['video']},
+                        files={'video': exercise.video},
                         data={
                             'points': json.dumps(points_tracked, separators=(',', ':')),
                             'exercise': json.dumps(ExerciseSerializer(exercise, context={'request': request}).data, separators=(',', ':')),
-                            'token': request.auth
+                            'token': request.auth,
+                            'resultsEndpoint': 'http://localhost:8000/exercises/{}/video_results/'.format(exercise.id)
                         }
                 )
                 if send_video_response.status_code == 200:
                     exercise.status = Exercise.PROCESSING
                 else:
                     exercise.status = Exercise.ERROR
+                exercise.save()
             except Exception as e:
                 exercise.status = Exercise.ERROR
-            exercise.video = request.data['video']
-            exercise.save()
+                exercise.save()
             return Response({}, status=200)
         return Response({'errors': errors}, status=400)
 
