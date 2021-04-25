@@ -12,24 +12,51 @@ from telerehabilitation_API.therapy.serializers import RoutineSerializer
 class ScheduledTrainingViewSet(APIView):
     def get(self, request):
         routine_id = request.GET.get('routine_id', 'NOT_FOUND')
-        if routine_id == 'NOT_FOUND':
+        scheduled_training_id = request.GET.get('scheduled_training_id', 'NOT_FOUND')
+        patient_id = request.GET.get('patient_id', 'NOT_FOUND')
+
+        if patient_id != 'NOT_FOUND':
             try:
-                scheduled_trainings = ScheduledTraining.objects.filter(therapy_patient__patient__user_id=request.user.id).all()
+                scheduled_trainings = ScheduledTraining.objects.filter(therapy_patient_id=int(patient_id)).all()
                 if scheduled_trainings:
 
                     return Response([{
+                        'id': scheduled_training.id,
                         'routine': RoutineSerializer(scheduled_training.routine, context={'request': request}).data,
-                        'start_time': scheduled_training.start_time.astimezone(pytz.timezone('America/Bogota'))
+                        'start_time': scheduled_training.start_time.astimezone(pytz.timezone('America/Bogota')),
+                        'status': scheduled_training.status,
+                        'status_verbose': next(status[1] for status in ScheduledTraining.SCHEDULED_TRAINING_STATUS if
+                                               status[0] == scheduled_training.status)
                     } for scheduled_training in scheduled_trainings], status=200)
                 else:
                     return Response(status=404)
             except ScheduledTraining.DoesNotExist:
                 return Response(status=404)
-        else:
+
+        if scheduled_training_id != 'NOT_FOUND':
+            try:
+                scheduled_training = ScheduledTraining.objects.get(pk=int(scheduled_training_id))
+                if scheduled_training:
+
+                    return Response({
+                        'id': scheduled_training.id,
+                        'routine': RoutineSerializer(scheduled_training.routine, context={'request': request}).data,
+                        'start_time': scheduled_training.start_time.astimezone(pytz.timezone('America/Bogota')),
+                        'status': scheduled_training.status,
+                        'status_verbose': next(status[1] for status in ScheduledTraining.SCHEDULED_TRAINING_STATUS if
+                                               status[0] == scheduled_training.status)
+                    }, status=200)
+                else:
+                    return Response(status=404)
+            except ScheduledTraining.DoesNotExist:
+                return Response(status=404)
+
+        if routine_id != 'NOT_FOUND':
             try:
                 scheduled_trainings = ScheduledTraining.objects.filter(routine__id=routine_id).all()
                 if scheduled_trainings:
                     return Response([{
+                        'id': scheduled_training.id,
                         'routine': RoutineSerializer(scheduled_training.routine, context={'request': request}).data,
                         'start_time': scheduled_training.start_time.astimezone(pytz.timezone('America/Bogota')),
                         'patient': PatientSerializer(scheduled_training.therapy_patient.patient, context={'request': request}).data,
@@ -39,6 +66,22 @@ class ScheduledTrainingViewSet(APIView):
                     return Response(status=404)
             except ScheduledTraining.DoesNotExist:
                 return Response(status=404)
+
+        try:
+            scheduled_trainings = ScheduledTraining.objects.filter(
+                therapy_patient__patient__user_id=request.user.id).all()
+            if scheduled_trainings:
+
+                return Response([{
+                    'id': scheduled_training.id,
+                    'routine': RoutineSerializer(scheduled_training.routine, context={'request': request}).data,
+                    'start_time': scheduled_training.start_time.astimezone(pytz.timezone('America/Bogota')),
+                    'status': scheduled_training.status
+                } for scheduled_training in scheduled_trainings], status=200)
+            else:
+                return Response(status=404)
+        except ScheduledTraining.DoesNotExist:
+            return Response(status=404)
 
     def post(self, request):
         body = request.data

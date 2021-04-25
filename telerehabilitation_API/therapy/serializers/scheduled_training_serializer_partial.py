@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from telerehabilitation_API.therapy.models import ScheduledTraining
-from telerehabilitation_API.therapy.serializers import RoutineSerializer, TherapyPatientSerializer
+from telerehabilitation_API.therapy.serializers import RoutineSerializer
 
 
 class ChoiceField(serializers.ChoiceField):
@@ -22,11 +22,10 @@ class ChoiceField(serializers.ChoiceField):
         self.fail('invalid_choice', input=data)
 
 
-class ScheduledTrainingSerializer(serializers.ModelSerializer):
+class ScheduledTrainingSerializerPartial(serializers.ModelSerializer):
     routine = RoutineSerializer(required=False)
-    therapy_patient = TherapyPatientSerializer(required=False)
     status = ChoiceField(choices=ScheduledTraining.SCHEDULED_TRAINING_STATUS, required=False)
 
     class Meta:
         model = ScheduledTraining
-        fields = '__all__'
+        fields = ['routine', 'status']

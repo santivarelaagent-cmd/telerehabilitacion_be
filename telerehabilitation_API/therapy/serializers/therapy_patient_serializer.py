@@ -12,4 +12,4 @@ class TherapyPatientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TherapyPatient
-        fields = '__all__'
+        fields = ['id', 'therapy', 'therapist', 'patient', 'scheduled_trainings']

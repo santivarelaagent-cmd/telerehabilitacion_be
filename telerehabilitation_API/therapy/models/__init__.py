@@ -8,3 +8,5 @@ from .scheduled_training import ScheduledTraining
 from .exercise_difficulty import ExerciseDifficulty
 from .difficulty_range import DifficultyRange
 from .scheduled_training_difficulty import ScheduledTrainingDifficulty
+from .exercise_result import ExerciseResult
+from .training import Training
