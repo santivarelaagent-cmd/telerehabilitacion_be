@@ -21,8 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-print(os.environ)
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'dr(!w#d(t^8pql#-7s#5(e*h+z(kq-(2flp0&7ceholxa^d19*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -97,10 +96,10 @@ WSGI_APPLICATION = 'telerehabilitation_API.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'db',
+        'NAME': 'telerehabilitation',
+        'USER': 'telerehabilitation',
+        'PASSWORD': '3npQ2xn2v7H2',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
