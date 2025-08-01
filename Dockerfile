@@ -27,6 +27,6 @@ EXPOSE 8000
 # Start command using gunicorn
 # CMD ["gunicorn", "--bind", "0.0.0.0:8000", "telerehabilitation_API.wsgi:application"]
 
-RUN python manage.py makemigrations && python manage.py migrate && python create_superuser.py
+RUN python manage.py makemigrations && python manage.py migrate
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
