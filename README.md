@@ -7,7 +7,7 @@
 
 ## Esquema DB
 
-* > [Diagrama ER](https://drive.google.com/file/d/11CthVkQSIoFV-ixqy66K8xz2x26dKVao/view?usp=sharing) 
+* > [Diagrama ER](https://raw.githubusercontent.com/santivarelaagent-cmd/telerehabilitacion_be/main/ER.svg) 
 
 * > [LIBRO PY](https://aprendepython.es/core/introduction/)
 
