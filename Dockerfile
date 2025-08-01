@@ -25,4 +25,6 @@ COPY . /usr/api
 EXPOSE 8000
 
 # Start command using gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "telerehabilitation_API.wsgi:application"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "telerehabilitation_API.wsgi:application"]
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
