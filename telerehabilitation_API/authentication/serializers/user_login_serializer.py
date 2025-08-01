@@ -8,7 +8,9 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField(min_length=8, max_length=64)
 
     def validate(self, data):
+        print(data)
         user = authenticate(username=data['username'], password=data['password'])
+        print(user)
         if not user:
             raise serializers.ValidationError('The credentials are not valid')
 

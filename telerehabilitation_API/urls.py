@@ -54,6 +54,7 @@ router.register(r'routines', RoutineViewSet)
 router.register(r'exercises', ExerciseViewSet)
 router.register(r'skeleton', SkeletonViewSet)
 
+
 urlpatterns = [
    path('admin/', admin.site.urls),
    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

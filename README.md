@@ -1,0 +1,7 @@
+## Telerehabilitación API
+
+# Dependecias
+
+# Esquema DB
+
+> [Diagrama ER](https://drive.google.com/file/d/11CthVkQSIoFV-ixqy66K8xz2x26dKVao/view?usp=sharing) > [MI LIBRO LUNA DE PLUTON](https://aprendepython.es/core/introduction/)
