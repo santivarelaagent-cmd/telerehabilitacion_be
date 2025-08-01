@@ -3,7 +3,7 @@
 
 ## Arquitectura
 
-![Base de datos](arch.svg "Optional title text")
+![Arquitectura](arch.svg "Optional title text")
 
 ## Esquema DB
 
