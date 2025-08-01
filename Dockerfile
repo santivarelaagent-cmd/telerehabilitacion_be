@@ -20,3 +20,12 @@ RUN pip install -r requirements.txt
 
 # Copy application code
 COPY . /usr/api
+
+# Collect static files (if needed)
+RUN python manage.py collectstatic --noinput || true
+
+# Expose port
+EXPOSE 8000
+
+# Start command using gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "telerehabilitation_API.wsgi:application"]
