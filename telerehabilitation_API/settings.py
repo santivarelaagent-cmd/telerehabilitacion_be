@@ -65,6 +65,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "https://telerehabilitacion-be.onrender.com",
+    "https://telerehabilitacion-be.onrender.com/swagger/"
 ]
 
 REST_FRAMEWORK = {
