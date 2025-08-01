@@ -4,5 +4,6 @@ telerehabilitation_API/**/migrations/0*
 *__pycache__/
 media/
 cmd_commons.txt
+cmd_commons.md
 .env
 therapy.drawio (2).pdf
