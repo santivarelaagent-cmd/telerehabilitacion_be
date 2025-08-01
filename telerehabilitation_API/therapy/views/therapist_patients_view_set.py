@@ -1,5 +1,3 @@
-from lib2to3.fixes.fix_input import context
-
 import pytz
 from rest_framework.response import Response
 from rest_framework.views import APIView
