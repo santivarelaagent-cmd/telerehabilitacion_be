@@ -24,9 +24,6 @@ COPY . /usr/api
 # Expose port
 EXPOSE 8000
 
-# Start command using gunicorn
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "telerehabilitation_API.wsgi:application"]
-
-RUN python manage.py makemigrations && python manage.py migrate
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Comando de inicio: aplica migraciones y luego ejecuta el servidor
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
