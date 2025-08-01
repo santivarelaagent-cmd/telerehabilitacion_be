@@ -5,6 +5,7 @@ coreapi
 coreschema
 Django
 django-cors-headers
+django-environ
 djangorestframework
 drf-yasg
 gevent
