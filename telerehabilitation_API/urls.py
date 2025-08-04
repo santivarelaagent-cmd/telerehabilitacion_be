@@ -33,6 +33,13 @@ from telerehabilitation_API.therapy.views.scheduled_training_view_set import Sch
 from telerehabilitation_API.therapy.views.skeleton_view_set import SkeletonViewSet
 from telerehabilitation_API.therapy.views.therapist_patients_view_set import TherapistPatientsViewSet
 from telerehabilitation_API.therapy.views.training_view_set import TrainingViewSet, TrainingEndViewSet
+from drf_yasg.generators import OpenAPISchemaGenerator
+
+class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
+    def get_schema(self, request=None, public=False):
+        schema = super().get_schema(request, public)
+        schema.schemes = ["http", "https"]
+        return schema
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -45,6 +52,7 @@ schema_view = get_schema_view(
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
+   generator_class= BothHttpAndHttpsSchemaGenerator,
 )
 
 router = routers.DefaultRouter()
