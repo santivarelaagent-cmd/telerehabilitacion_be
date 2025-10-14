@@ -1,6 +1,6 @@
 # Telerehabilitación API
-* > [GIT INGEST](https://gitingest.com/santivarelaagent-cmd/telerehabilitacion_be)
-* > [DEEP WIKI](https://deepwiki.com/santivarelaagent-cmd/telerehabilitacion_be)
+* > <a href="https://gitingest.com/santivarelaagent-cmd/telerehabilitacion_be" target="_blank">GIT INGEST</a>
+* > <a href="https://deepwiki.com/santivarelaagent-cmd/telerehabilitacion_be" target="_blank">DEEP WIKI</a>
 
 ## Arquitectura
 
