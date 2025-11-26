@@ -30,7 +30,8 @@ class TherapyViewSet(viewsets.ModelViewSet):
             [{
                 'id': x.id,
                 'patient': PatientSerializer(x.patient).data
-            } for x in self.get_object().patients.all()]
+            } for x in self.get_object().patients.all()
+            ]
         )
 
     @action(methods=['post'], detail=True)

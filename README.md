@@ -9,6 +9,13 @@
 ## Esquema DB
 
 * > <a href="https://raw.githubusercontent.com/santivarelaagent-cmd/telerehabilitacion_be/main/ER.svg" target="_blank">Diagrama ER</a>
+  
+
+
+## ESQUELETO MEDIAPIPE
+
+![Esqueleto](skeleton-reference.jpg "Optional title text")
+
 
 * > [LIBRO PY](https://aprendepython.es/core/introduction/)
 

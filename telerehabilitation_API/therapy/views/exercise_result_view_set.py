@@ -12,9 +12,16 @@ from telerehabilitation_API.therapy.models.exercise_result_point import Exercise
 from telerehabilitation_API.therapy.serializers import ExerciseSerializer
 from telerehabilitation_API.therapy.serializers.exercise_results_serializer import ExerciseResultSerializer
 from telerehabilitation_API.therapy.serializers.exercise_results_video_serializer import ExerciseResultsVideoSerializer
+from drf_yasg.utils import swagger_auto_schema
 
 
 class ExerciseResultViewSet(APIView):
+
+    @swagger_auto_schema(
+        operation_description="",
+        operation_summary="",
+        responses={200: ExerciseResultSerializer}
+    )
     def get(self, request):
         exercise_result_id = request.GET.get('exercise_result_id', 'NOT_FOUND')
         training_id = request.GET.get('training_id', 'NOT_FOUND')
@@ -54,7 +61,10 @@ class ExerciseResultViewSet(APIView):
             )
         except ExerciseResult.DoesNotExist:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
-
+    @swagger_auto_schema(
+        request_body=ExerciseResultsVideoSerializer,
+        responses={200: 'OK'}
+    )
     def post(self, request):
         video_serialized = ExerciseResultsVideoSerializer(data=request.data)
         errors = []
@@ -79,18 +89,19 @@ class ExerciseResultViewSet(APIView):
             } for x in ExerciseSkeletonPointTracked.objects.filter(exercise=new_exercise_result.exercise).all()]
             try:
                 send_video_response = requests.post(
-                        'http://localhost:3000/video/',
-                        files={'video': new_exercise_result.video},
-                        data={
-                            'points': json.dumps(points_tracked, separators=(',', ':')),
-                            'exercise': json.dumps(
-                                ExerciseSerializer(
-                                    new_exercise_result.exercise,
-                                    context={'request': request}
-                                ).data,
-                                separators=(',', ':')),
-                            'resultsEndpoint': 'http://localhost:8000/exercise_results/{}/results'.format(new_exercise_result.id)
-                        }
+                    'http://localhost:3000/video/',
+                    files={'video': new_exercise_result.video},
+                    data={
+                        'points': json.dumps(points_tracked, separators=(',', ':')),
+                        'exercise': json.dumps(
+                            ExerciseSerializer(
+                                new_exercise_result.exercise,
+                                context={'request': request}
+                            ).data,
+                            separators=(',', ':')),
+                        'resultsEndpoint': 'http://localhost:8000/exercise_results/{}/results'.format(
+                            new_exercise_result.id)
+                    }
                 )
                 if send_video_response.status_code == 200:
                     new_exercise_result.status = ExerciseResult.PROCESSING
@@ -118,7 +129,8 @@ class ExerciseResultResultsViewSet(APIView):
                 exercise_result.save()
                 recieved_data = request.data['results']
                 points = recieved_data['points']
-                for point_tracked in ExerciseSkeletonPointTracked.objects.filter(exercise=exercise_result.exercise).all():
+                for point_tracked in ExerciseSkeletonPointTracked.objects.filter(
+                        exercise=exercise_result.exercise).all():
                     point = next(x for x in points if x['center'] == point_tracked.skeleton_point.codename)
                     exercise_result_point = ExerciseResultPoint.objects.create(
                         point_tracked=point_tracked,

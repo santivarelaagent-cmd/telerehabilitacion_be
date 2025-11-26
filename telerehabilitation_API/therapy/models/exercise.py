@@ -22,7 +22,7 @@ class Exercise(models.Model):
     name = models.CharField(max_length=128)
     description = models.TextField()
     order = models.IntegerField()
-    video = models.FileField(upload_to=upload_exercise_video_to)
+    video = models.URLField(max_length=512, blank=True, null=True)
     status = models.CharField(max_length=32, choices=EXERCISE_STATUS, default=NO_VIDEO)
     is_model = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

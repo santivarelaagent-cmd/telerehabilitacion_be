@@ -20,6 +20,8 @@ from rest_framework import permissions, routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+
+
 from telerehabilitation_API.authentication.views import UserViewSet, PatientViewSet
 from telerehabilitation_API.authentication.views.admin_view_set import AdminViewSet
 from telerehabilitation_API.authentication.views.therapist_view_set import TherapistViewSet
