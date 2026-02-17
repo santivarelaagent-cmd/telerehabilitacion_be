@@ -1,4 +1,3 @@
-import requests
 import json
 
 from rest_framework import permissions, viewsets, status
@@ -48,28 +47,10 @@ class ExerciseViewSet(viewsets.ModelViewSet):
             for point in request.data['points'].split(','):
                 point_tracked = ExerciseSkeletonPointTracked(exercise=exercise, skeleton_point_id=int(point))
                 point_tracked.save()
-            points_tracked = [{
-                'center': x.skeleton_point.codename,
-                'left_point': x.skeleton_point.left_point.codename,
-                'right_point': x.skeleton_point.right_point.codename
-            } for x in ExerciseSkeletonPointTracked.objects.filter(exercise=exercise).all()]
+            
             try:
                 exercise.video = request.data['video']
-                exercise.save()
-                send_video_response = requests.post(
-                        'http://localhost:3000/video/',
-                        files={'video': exercise.video},
-                        data={
-                            'points': json.dumps(points_tracked, separators=(',', ':')),
-                            'exercise': json.dumps(ExerciseSerializer(exercise, context={'request': request}).data, separators=(',', ':')),
-                            'token': request.auth,
-                            'resultsEndpoint': 'http://localhost:8000/exercises/{}/video_results/'.format(exercise.id)
-                        }
-                )
-                if send_video_response.status_code == 200:
-                    exercise.status = Exercise.PROCESSING
-                else:
-                    exercise.status = Exercise.ERROR
+                exercise.status = Exercise.PROCESSING
                 exercise.save()
             except Exception as e:
                 exercise.status = Exercise.ERROR

@@ -62,6 +62,8 @@ class ExerciseResultViewSet(APIView):
         except ExerciseResult.DoesNotExist:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
     @swagger_auto_schema(
+        operation_summary="Upload a new video",
+        operation_description="This end point handles the request for the video and send it to an externar server for processing",
         request_body=ExerciseResultsVideoSerializer,
         responses={200: 'OK'}
     )
