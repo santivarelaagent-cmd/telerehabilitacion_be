@@ -1,11 +1,21 @@
 # Telerehabilitación API
+
+Esta API es el backend para una plataforma de telerehabilitación física. Permite a los terapeutas gestionar pacientes,
+crear rutinas de ejercicios personalizadas y realizar un seguimiento del progreso mediante el análisis de video. Los
+pacientes pueden consultar sus entrenamientos programados, realizar ejercicios y recibir retroalimentación automática
+sobre su ejecución.
+
+Análisis del Repositorio:
+
 * > <a href="https://gitingest.com/santivarelaagent-cmd/telerehabilitacion_be" target="_blank">GIT INGEST</a>
+
+Documentación a profundidad:
+
 * > <a href="https://deepwiki.com/santivarelaagent-cmd/telerehabilitacion_be" target="_blank">DEEP WIKI</a>
 
 ## Arquitectura
 
 ![Arquitectura](arch.svg "Optional title text")
-
 
 ## Casos de uso
 
@@ -14,18 +24,14 @@
 ## Esquema DB
 
 * > <a href="https://raw.githubusercontent.com/santivarelaagent-cmd/telerehabilitacion_be/main/ER.svg" target="_blank">Diagrama ER</a>
-  
 
+![Base de datos](ER.svg "Optional title text")
 
 ## ESQUELETO MEDIAPIPE
 
 ![Esqueleto](skeleton-reference.jpg "Optional title text")
 
-
 * > [LIBRO PY](https://aprendepython.es/core/introduction/)
-
-
-![Base de datos](ER.svg "Optional title text")
 
 ## Dependecias
 
