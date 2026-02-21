@@ -6,6 +6,11 @@
 
 ![Arquitectura](arch.svg "Optional title text")
 
+
+## Casos de uso
+
+![Usecases](use_case.svg "Optional title text")
+
 ## Esquema DB
 
 * > <a href="https://raw.githubusercontent.com/santivarelaagent-cmd/telerehabilitacion_be/main/ER.svg" target="_blank">Diagrama ER</a>
