@@ -22,7 +22,7 @@ class ExerciseResult(models.Model):
     exercise = models.ForeignKey(Exercise, on_delete=models.SET_NULL, null=True, related_name='results')
     training = models.ForeignKey(Training, on_delete=models.SET_NULL, null=True, related_name='results')
     start_time = models.DateTimeField(null=True)
-    video = models.FileField(upload_to=upload_exercise_video_to)
+    video = models.URLField(max_length=512, blank=True, null=True)
     status = models.CharField(max_length=32, choices=EXERCISE_STATUS, default=NO_VIDEO)
     concept = models.TextField(null=True, blank=True)
     score = models.PositiveIntegerField(null=True, blank=True)

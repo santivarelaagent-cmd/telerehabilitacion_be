@@ -23,5 +23,12 @@ class PatientViewSet(APIView):
             new_patient.save()
             patient_group = Group.objects.get(name="Patient")
             patient_group.user_set.add(new_patient)
-            Patient.objects.create(user_id=new_patient.id)
+            Patient.objects.create(
+                user_id=new_patient.id,
+                birth_date=request.data.get('birth_date'),
+                height=request.data.get('height'),
+                weight=request.data.get('weight'),
+                gender=request.data.get('gender'),
+                description=request.data.get('description')
+            )
             return Response({}, status=201)
