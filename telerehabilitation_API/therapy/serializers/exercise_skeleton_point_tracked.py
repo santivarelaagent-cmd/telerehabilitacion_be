@@ -9,4 +9,4 @@ class ExerciseSkeletonPointTrackedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExerciseSkeletonPointTracked
-        fields = ['skeleton_point', 'skeleton_point_id', 'exercise_id', 'max_angle', 'min_angle']
+        fields = ['skeleton_point', 'skeleton_point_id', 'exercise_id', 'max_angle', 'min_angle', 'left_point_id', 'right_point_id']

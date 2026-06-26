@@ -44,9 +44,32 @@ class ExerciseViewSet(viewsets.ModelViewSet):
             errors.append({ 'points': 'There is no points' })
         if not errors:
             ExerciseSkeletonPointTracked.objects.filter(exercise=exercise).delete()
-            for point in request.data['points'].split(','):
-                point_tracked = ExerciseSkeletonPointTracked(exercise=exercise, skeleton_point_id=int(point))
-                point_tracked.save()
+            points_data = request.data['points']
+
+            # Si es un string que parece JSON list, lo parseamos
+            if isinstance(points_data, str) and points_data.strip().startswith('['):
+                try:
+                    points_data = json.loads(points_data)
+                except Exception:
+                    pass
+
+            # Formato nuevo: lista JSON de objetos con adyacentes personalizados
+            # [{"skeleton_point_id": 11, "left_point_id": 13, "right_point_id": 23}, ...]
+            if isinstance(points_data, list):
+                for pt in points_data:
+                    point_tracked = ExerciseSkeletonPointTracked(
+                        exercise=exercise,
+                        skeleton_point_id=int(pt['skeleton_point_id']),
+                        left_point_id=int(pt['left_point_id']) if pt.get('left_point_id') is not None else None,
+                        right_point_id=int(pt['right_point_id']) if pt.get('right_point_id') is not None else None,
+                    )
+                    point_tracked.save()
+            else:
+                # Formato legacy: IDs separados por comas "11,13,25"
+                for point in str(points_data).split(','):
+                    if point.strip().isdigit():
+                        point_tracked = ExerciseSkeletonPointTracked(exercise=exercise, skeleton_point_id=int(point))
+                        point_tracked.save()
             
             try:
                 exercise.video = request.data['video']
@@ -83,9 +106,16 @@ class ExerciseViewSet(viewsets.ModelViewSet):
     def points_tracked(self, request, pk=None):
         exercise = self.get_object()
         points = []
-        for point in exercise.tracked_points.all():
+        for point in exercise.tracked_points.select_related('skeleton_point', 'left_point', 'right_point').all():
             point_serialized = SkeletonPointSerializer(point.skeleton_point).data
-            point_serialized.update({'max_angle': point.max_angle,'min_angle': point.min_angle, 'point_id': point.id})
+            point_serialized.update({
+                'max_angle': point.max_angle,
+                'min_angle': point.min_angle,
+                'point_id': point.id,
+                # Resolver adyacentes: personalizado del ejercicio > por defecto del esqueleto
+                'left_point': point.left_point_id if point.left_point_id is not None else (point.skeleton_point.left_point_id if point.skeleton_point else None),
+                'right_point': point.right_point_id if point.right_point_id is not None else (point.skeleton_point.right_point_id if point.skeleton_point else None),
+            })
             points.append(point_serialized)
         return Response(points)
 
