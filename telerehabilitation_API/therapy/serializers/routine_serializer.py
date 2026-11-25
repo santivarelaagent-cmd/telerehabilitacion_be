@@ -5,6 +5,14 @@ from telerehabilitation_API.therapy.serializers import TherapySerializer
 from telerehabilitation_API.therapy.serializers.exercise_serializer import ExerciseSerializer
 
 
+class RoutineListSerializer(serializers.ModelSerializer):
+    therapy_id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = Routine
+        fields = ['id', 'therapy_id', 'name', 'description', 'is_model', 'is_active']
+
+
 class RoutineSerializer(serializers.ModelSerializer):
     exercises = ExerciseSerializer(many=True, required=False)
     therapy = TherapySerializer(required=False)

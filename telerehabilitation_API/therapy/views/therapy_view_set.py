@@ -11,7 +11,7 @@ from telerehabilitation_API.authentication.serializers import PatientSerializer
 
 
 class TherapyViewSet(viewsets.ModelViewSet):
-    queryset = Therapy.objects.all()
+    queryset = Therapy.objects.prefetch_related('routines').order_by('id')
     serializer_class = TherapySerializer
 
     def get_permissions(self):
@@ -30,7 +30,7 @@ class TherapyViewSet(viewsets.ModelViewSet):
             [{
                 'id': x.id,
                 'patient': PatientSerializer(x.patient).data
-            } for x in self.get_object().patients.all()
+            } for x in self.get_object().patients.select_related('patient__user').all()
             ]
         )
 
@@ -48,4 +48,8 @@ class TherapyViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=True)
     def routines(self, request, pk=None):
         therapy = self.get_object()
-        return Response(RoutineSerializer(therapy.routines.all(), many=True, context={'request': request}).data)
+        routines_qs = therapy.routines.select_related('therapy').prefetch_related(
+            'exercises__routine',
+            'exercises__difficulties__ranges__point_tracked__skeleton_point',
+        ).order_by('id')
+        return Response(RoutineSerializer(routines_qs, many=True, context={'request': request}).data)

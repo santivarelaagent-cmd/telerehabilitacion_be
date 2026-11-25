@@ -2,12 +2,26 @@ from rest_framework import permissions, viewsets
 
 from telerehabilitation_API.therapy.models import Routine
 from telerehabilitation_API.therapy.permissions import CanCreateRoutine, CanEditRoutine, CanDeleteRoutine
-from telerehabilitation_API.therapy.serializers import RoutineSerializer
+from telerehabilitation_API.therapy.serializers.routine_serializer import RoutineSerializer, RoutineListSerializer
 
 
 class RoutineViewSet(viewsets.ModelViewSet):
-    queryset = Routine.objects.all()
+    queryset = Routine.objects.all().order_by('id')
     serializer_class = RoutineSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return RoutineListSerializer
+        return RoutineSerializer
+
+    def get_queryset(self):
+        if self.action == 'list':
+            return Routine.objects.all().order_by('id')
+        return Routine.objects.select_related('therapy').prefetch_related(
+            'therapy__routines',
+            'exercises__routine',
+            'exercises__difficulties__ranges__point_tracked__skeleton_point',
+        ).order_by('id')
 
     def get_permissions(self):
         permissions_classes = [permissions.IsAuthenticated]

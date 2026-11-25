@@ -8,13 +8,26 @@ from telerehabilitation_API.therapy.models import Exercise, ExerciseSkeletonPoin
     DifficultyRange
 from telerehabilitation_API.therapy.permissions import CanCreateExercise, CanEditExercise, CanDeleteExercise
 from telerehabilitation_API.therapy.serializers import ExerciseSerializer, SkeletonPointSerializer
+from telerehabilitation_API.therapy.serializers.exercise_serializer import ExerciseListSerializer
 from telerehabilitation_API.therapy.serializers.exercise_difficulty_serializer import ExerciseDifficultySerializer
 from telerehabilitation_API.therapy.serializers.exercise_video_serializer import ExerciseVideoSerializer
 
 
 class ExerciseViewSet(viewsets.ModelViewSet):
-    queryset = Exercise.objects.all()
+    queryset = Exercise.objects.all().order_by('id')
     serializer_class = ExerciseSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ExerciseListSerializer
+        return ExerciseSerializer
+
+    def get_queryset(self):
+        if self.action == 'list':
+            return Exercise.objects.all().order_by('id')
+        return Exercise.objects.select_related('routine').prefetch_related(
+            'difficulties__ranges__point_tracked__skeleton_point',
+        ).order_by('id')
 
     def create(self, request, *args, **kwargs):
         exercise_serialized = self.get_serializer(data=request.data)
