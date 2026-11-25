@@ -1,5 +1,6 @@
 import json
 
+from django.db.models import Q
 from rest_framework import permissions, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -27,7 +28,14 @@ class ExerciseViewSet(viewsets.ModelViewSet):
         if ordering not in ('id', '-id'):
             ordering = 'id'
         if self.action == 'list':
-            return Exercise.objects.all().order_by(ordering)
+            qs = Exercise.objects.all()
+            search = (self.request.query_params.get('search') or '').strip()
+            if search:
+                query = Q(name__icontains=search) | Q(description__icontains=search)
+                if search.isdigit():
+                    query |= Q(id=int(search))
+                qs = qs.filter(query)
+            return qs.order_by(ordering)
         return Exercise.objects.select_related('routine').prefetch_related(
             'difficulties__ranges__point_tracked__skeleton_point',
         ).order_by(ordering)
