@@ -14,6 +14,12 @@ class TherapyViewSet(viewsets.ModelViewSet):
     queryset = Therapy.objects.prefetch_related('routines').order_by('id')
     serializer_class = TherapySerializer
 
+    def get_queryset(self):
+        ordering = self.request.query_params.get('ordering', 'id')
+        if ordering not in ('id', '-id'):
+            ordering = 'id'
+        return Therapy.objects.prefetch_related('routines').order_by(ordering)
+
     def get_permissions(self):
         permissions_classes = [permissions.IsAuthenticated]
         if self.action == 'create':

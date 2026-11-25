@@ -15,13 +15,16 @@ class RoutineViewSet(viewsets.ModelViewSet):
         return RoutineSerializer
 
     def get_queryset(self):
+        ordering = self.request.query_params.get('ordering', 'id')
+        if ordering not in ('id', '-id'):
+            ordering = 'id'
         if self.action == 'list':
-            return Routine.objects.all().order_by('id')
+            return Routine.objects.all().order_by(ordering)
         return Routine.objects.select_related('therapy').prefetch_related(
             'therapy__routines',
             'exercises__routine',
             'exercises__difficulties__ranges__point_tracked__skeleton_point',
-        ).order_by('id')
+        ).order_by(ordering)
 
     def get_permissions(self):
         permissions_classes = [permissions.IsAuthenticated]
