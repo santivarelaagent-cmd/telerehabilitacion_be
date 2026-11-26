@@ -1,12 +1,12 @@
 import json
 
-from django.db.models import Q
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from telerehabilitation_API.therapy.models import Therapy, TherapyPatient
 from telerehabilitation_API.therapy.permissions import CanCreateTherapy, CanEditTherapy, CanDeleteTherapy
+from telerehabilitation_API.therapy.search_utils import filter_queryset_fuzzy
 from telerehabilitation_API.therapy.serializers import TherapySerializer, RoutineSerializer
 from telerehabilitation_API.authentication.serializers import PatientSerializer
 
@@ -23,10 +23,7 @@ class TherapyViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             search = (self.request.query_params.get('search') or '').strip()
             if search:
-                query = Q(name__icontains=search) | Q(description__icontains=search)
-                if search.isdigit():
-                    query |= Q(id=int(search))
-                qs = qs.filter(query)
+                qs = filter_queryset_fuzzy(qs, search, fields=('name', 'description'))
         return qs.order_by(ordering)
 
     def get_permissions(self):

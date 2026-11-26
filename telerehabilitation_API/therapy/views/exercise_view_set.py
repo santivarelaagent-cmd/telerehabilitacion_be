@@ -1,6 +1,5 @@
 import json
 
-from django.db.models import Q
 from rest_framework import permissions, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -8,6 +7,7 @@ from rest_framework.response import Response
 from telerehabilitation_API.therapy.models import Exercise, ExerciseSkeletonPointTracked, ExerciseDifficulty, \
     DifficultyRange
 from telerehabilitation_API.therapy.permissions import CanCreateExercise, CanEditExercise, CanDeleteExercise
+from telerehabilitation_API.therapy.search_utils import filter_queryset_fuzzy
 from telerehabilitation_API.therapy.serializers import ExerciseSerializer, SkeletonPointSerializer
 from telerehabilitation_API.therapy.serializers.exercise_serializer import ExerciseListSerializer
 from telerehabilitation_API.therapy.serializers.exercise_difficulty_serializer import ExerciseDifficultySerializer
@@ -31,10 +31,7 @@ class ExerciseViewSet(viewsets.ModelViewSet):
             qs = Exercise.objects.all()
             search = (self.request.query_params.get('search') or '').strip()
             if search:
-                query = Q(name__icontains=search) | Q(description__icontains=search)
-                if search.isdigit():
-                    query |= Q(id=int(search))
-                qs = qs.filter(query)
+                qs = filter_queryset_fuzzy(qs, search, fields=('name', 'description'))
             return qs.order_by(ordering)
         return Exercise.objects.select_related('routine').prefetch_related(
             'difficulties__ranges__point_tracked__skeleton_point',

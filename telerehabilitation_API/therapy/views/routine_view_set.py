@@ -1,8 +1,8 @@
-from django.db.models import Q
 from rest_framework import permissions, viewsets
 
 from telerehabilitation_API.therapy.models import Routine
 from telerehabilitation_API.therapy.permissions import CanCreateRoutine, CanEditRoutine, CanDeleteRoutine
+from telerehabilitation_API.therapy.search_utils import filter_queryset_fuzzy
 from telerehabilitation_API.therapy.serializers.routine_serializer import RoutineSerializer, RoutineListSerializer
 
 
@@ -23,10 +23,7 @@ class RoutineViewSet(viewsets.ModelViewSet):
             qs = Routine.objects.all()
             search = (self.request.query_params.get('search') or '').strip()
             if search:
-                query = Q(name__icontains=search) | Q(description__icontains=search)
-                if search.isdigit():
-                    query |= Q(id=int(search))
-                qs = qs.filter(query)
+                qs = filter_queryset_fuzzy(qs, search, fields=('name', 'description'))
             return qs.order_by(ordering)
         return Routine.objects.select_related('therapy').prefetch_related(
             'therapy__routines',
